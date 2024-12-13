@@ -1,0 +1,29 @@
+# Nome do Projeto
+# Descrição do seu projeto.
+
+# Passo 1: Clonar o repositório
+# Use o comando abaixo para clonar o repositório e navegar para o diretório do projeto:
+# git clone https://github.com/seu-usuario/nome-do-repositorio.git
+
+# Passo 2: Criar o ambiente virtual
+# Crie um ambiente virtual Python para isolar as dependências do projeto:
+# python -m venv venv
+
+# Passo 3: Ativar o ambiente virtual
+# Ative o ambiente virtual:
+# - No Linux/macOS:
+#   source venv/bin/activate
+# - No Windows:
+#   .\venv\Scripts\activate
+
+# Passo 4: Instalar as dependências
+# Instale as dependências do projeto usando o arquivo requirements.txt:
+# pip install -r requirements.txt
+
+# Passo 5: Rodar o projeto
+# Execute o projeto. Por exemplo, se estiver usando o Streamlit:
+# streamlit run indexUI.py
+
+# Passo 6: Desativar o ambiente virtual
+# Quando terminar de trabalhar no projeto, desative o ambiente virtual com o comando:
+# deactivate
