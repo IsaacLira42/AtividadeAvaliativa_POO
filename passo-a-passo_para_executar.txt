@@ -3,7 +3,7 @@
 
 # Passo 1: Clonar o repositório
 # Use o comando abaixo para clonar o repositório e navegar para o diretório do projeto:
-# git clone https://github.com/seu-usuario/nome-do-repositorio.git
+# git clone https://github.com/IsaacLira42/AtividadeAvaliativa_POO.git
 
 # Passo 2: Criar o ambiente virtual
 # Crie um ambiente virtual Python para isolar as dependências do projeto:
@@ -23,7 +23,3 @@
 # Passo 5: Rodar o projeto
 # Execute o projeto. Por exemplo, se estiver usando o Streamlit:
 # streamlit run indexUI.py
-
-# Passo 6: Desativar o ambiente virtual
-# Quando terminar de trabalhar no projeto, desative o ambiente virtual com o comando:
-# deactivate
