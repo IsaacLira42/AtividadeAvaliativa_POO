@@ -41,7 +41,7 @@ class Clientes:
             if cliente.id == id:
                 return cliente
             
-        print("Cliente não encontado")
+        # print("Cliente não encontado")
         return None
 
     @classmethod
@@ -54,18 +54,18 @@ class Clientes:
                 cliente.email = obj.email
                 cliente.fone = obj.fone
 
-                print("Cliente Atualizado com sucesso!")
+                # print("Cliente Atualizado com sucesso!")
 
                 cls.salvar()
                 return
-        print("Cliente não encontrado")
+        # print("Cliente não encontrado")
         
     @classmethod
     def excluir(cls, id: int) -> None:
         cls.abrir()
         cls.objetos = [cliente for cliente in cls.objetos if cliente.id != id]
         cls.salvar()
-        print("Cliente removido com sucesso!")
+        # print("Cliente removido com sucesso!")
             
 
     ############ Outros métodos ############################

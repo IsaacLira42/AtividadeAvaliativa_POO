@@ -12,3 +12,5 @@ from models.vendaitem import VendaItem
 from models.vendaitens import VendaItens
 
 from view import View
+
+
