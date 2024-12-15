@@ -38,7 +38,7 @@ class Produtos:
             if produto.id == id:
                 return produto
 
-        print("Produto não encontrado")
+        # print("Produto não encontrado")
         return None
 
     @classmethod
@@ -52,18 +52,18 @@ class Produtos:
                 produto.estoque = obj.estoque
                 produto.idCategoria = obj.idCategoria
 
-                print("Produto atualizado com sucesso!")
+                # print("Produto atualizado com sucesso!")
 
                 cls.salvar()
                 return
-        print("Produto não encontrado")
+        # print("Produto não encontrado")
 
     @classmethod
     def excluir(cls, id: int) -> None:
         cls.abrir()
         cls.objetos = [produto for produto in cls.objetos if produto.id != id]
         cls.salvar()
-        print("Produto removido com sucesso!")
+        # print("Produto removido com sucesso!")
 
     ############ Outros métodos ############################
     @classmethod
