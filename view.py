@@ -28,6 +28,20 @@ class View:
     @classmethod
     def cliente_excluir(cls, id: int) -> None:
         Clientes.excluir(id)
+    # Métodos sobre Sessão ############
+    @staticmethod
+    def cliente_admin():
+        # Verificar se o admin existe
+        for c in Clientes.listar():
+            if c.email == "admin": return None
+        # se não existir, cria um admin com as credenciais padrão.
+        View.cliente_inserir("admin", "admin", "(00) 0 0000-0000", "admin")    
+    @staticmethod
+    def cliente_autenticar(email, senha):
+        for c in Clientes.listar():
+            if c.email == email and c.senha == senha:
+                return { "id" : c.id, "nome" : c.nome }
+        return None  
 
 
     ############ Métodos sobre Categorias ############
