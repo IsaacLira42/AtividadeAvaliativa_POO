@@ -41,7 +41,7 @@ class ManterProdutoUI:
             if idCategoria is None:
                 st.error("Selecione uma categoria")
             else:
-                View.produto_inserir(0, nome, preco, estoque, idCategoria)
+                View.produto_inserir(nome, preco, estoque, idCategoria)
                 st.success("Produto inserido com sucesso")
                 time.sleep(2)
                 st.rerun()
@@ -60,7 +60,7 @@ class ManterProdutoUI:
 
             categorias = Categorias.listar()
             if categorias:
-                categoria_selecionada = st.selectbox("Selecione a categoria", [categoria.descricao for categoria in categorias])
+                categoria_selecionada = st.selectbox("Selecione a categoria", [categoria.descricao for categoria in categorias], key="select_categoria_atualizar")
                 idCategoria = next(categoria.id for categoria in categorias if categoria.descricao == categoria_selecionada)
             else:
                 st.warning("Sem categorias")

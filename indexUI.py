@@ -14,6 +14,7 @@ from templates.abrircontaUI import AbrirContaUI
 from templates.loginUi import LoginUI
 from templates.manterclienteUI import ManterClienteUI
 from templates.manterprodutosUI import ManterProdutoUI
+from templates.mantercategoriaUI import ManterCategoriaUI
 # from templates.clienteUI import ClienteUI
 
 from view import View
@@ -25,10 +26,10 @@ class IndexUI:
         if op == "Abrir Conta": AbrirContaUI.main()
                
     def menu_admin():            
-        op = st.sidebar.selectbox("Menu", ["Cadastro de Clientes", "Cadastro de Produtos"])
+        op = st.sidebar.selectbox("Menu", ["Cadastro de Clientes", "Cadastro de Produtos", "Cadastro de Categorias"])
         if op == "Cadastro de Clientes": ManterClienteUI.main()
         if op == "Cadastro de Produtos": ManterProdutoUI.main()
-
+        if op == "Cadastro de Categorias": ManterCategoriaUI.main()
     def menu_cliente():
         op = st.sidebar.selectbox("Menu", ["Listar Produtos", "Adicionar Produto no Carrinho", "Fechar Pedido", "Ver Meus Pedidos"])
         # if op == "Listar Produtos" : ClienteUI.main()

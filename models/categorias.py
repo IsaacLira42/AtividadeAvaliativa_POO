@@ -38,7 +38,7 @@ class Categorias:
             if categoria.id == id:
                 return categoria
 
-        print("Categoria não encontrada")
+        #print("Categoria não encontrada")
         return None
 
     @classmethod
@@ -49,18 +49,18 @@ class Categorias:
             if categoria.id == obj.id:
                 categoria.descricao = obj.descricao
 
-                print("Categoria atualizada com sucesso!")
+                # print("Categoria atualizada com sucesso!")
 
                 cls.salvar()
                 return
-        print("Categoria não encontrada")
+        #print("Categoria não encontrada")
 
     @classmethod
     def excluir(cls, id: int) -> None:
         cls.abrir()
         cls.objetos = [categoria for categoria in cls.objetos if categoria.id != id]
         cls.salvar()
-        print("Categoria removida com sucesso!")
+        #print("Categoria removida com sucesso!")
 
     ############ Outros métodos ############################
     @classmethod
