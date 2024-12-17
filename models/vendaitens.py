@@ -48,18 +48,18 @@ class VendaItens:
                 item.idvenda = obj.idvenda
                 item.idproduto = obj.idproduto
 
-                print("Item atualizado com sucesso!")
+                #print("Item atualizado com sucesso!")
 
                 cls.salvar()
                 return
-        print("Item não encontrado")
+        #print("Item não encontrado")
 
     @classmethod
     def excluir(cls, id: int) -> None:
         cls.abrir()
         cls.objetos = [item for item in cls.objetos if item.id != id]
         cls.salvar()
-        print("Item removido com sucesso!")
+        #print("Item removido com sucesso!")
 
     ############ Outros métodos ############################
     @classmethod

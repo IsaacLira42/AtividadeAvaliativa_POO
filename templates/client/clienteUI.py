@@ -1,3 +1,4 @@
+from datetime import datetime
 import streamlit as st
 import pandas as pd
 from view import View
@@ -18,12 +19,16 @@ class ClienteUI:
     def main():
         st.header("Área do Cliente")
 
+        butaun_finalizar = st.button("Fechar Pedido")
+        if butaun_finalizar:
+            ClienteUI.fecharpedido()
+
         # "Listar Produtos", "Adicionar Produto no Carrinho", "Fechar Pedido", "Ver Meus Pedidos"
-        tab1, tab2, tab3 = st.tabs(["Listar Produtos", "Adicionar Produto no carrinho", "Remover Produto do carrinho"])
+        tab1, tab2, tab3, tab4= st.tabs(["Visualizar Carrinho", "Adicionar Produto", "Remover Produto", "Meus Pedidos"])
         with tab1: ClienteUI.listar()
         with tab2: ClienteUI.inserir()
         with tab3: ClienteUI.remover()
-        #with tab4: ClienteUI.atualizar()
+        with tab4: ClienteUI.meuspedidos()
 
     def listar():
         # filtra as vendas do cliente
@@ -47,7 +52,7 @@ class ClienteUI:
         else:    
             dic = []
             for obj in produtos_cliente: dic.append(obj.__dict__)
-            df = pd.DataFrame([{"Descrição": p.descricao, "Preço": p.preco, "Estoque": p.estoque} for p in produtos_cliente])
+            df = pd.DataFrame([{"Descrição": p.descricao, "Preço": p.preco, "estoque": p.estoque} for p in produtos_cliente])
             st.dataframe(df)
 
     def inserir():
@@ -83,15 +88,128 @@ class ClienteUI:
 
                 # Botão para inserir o produto
                 if st.button("Inserir"):
-                    if novo_estoque < 0:
-                        st.error("Estoque insuficiente!")
+                    # Verifica se o produto já existe no carrinho
+                    vendaitens_cliente = [item for item in View.vendaitem_listar() if item.idvenda == id_venda_atual]
+                    if any(item.idproduto == idProduto for item in vendaitens_cliente):
+                        st.warning("Este produto já está no carrinho.")
                     else:
-                        produto_escolhido.estoque = novo_estoque
+                        # Atualizar estoque e inserir produto
+                        View.produto_atualizar(idProduto, produto_escolhido.descricao, produto_escolhido.preco, novo_estoque, produto_escolhido.idCategoria)
                         View.vendaitem_inserir(quantidade, preco, id_venda_atual, idProduto)
                         st.success("Produto inserido com sucesso!")
                         time.sleep(2)
                         st.rerun()
+
             else:
                 st.error("Não há produtos disponíveis na categoria selecionada.")
         else:
             st.write("Nenhuma produto disponível.")
+
+    def remover():
+        # Filtra as vendas do cliente
+        cliente_id = st.session_state.get("cliente_id")
+        vendas_cliente = View.vendas_cliente(cliente_id)  # Lista de vendas do cliente
+        if not vendas_cliente:
+            st.warning("Nenhuma venda encontrada.")
+            return
+
+        id_venda_atual = vendas_cliente[-1].id  # Id da venda atual
+
+        # Carrinho mais recente (aberto)
+        vendaitens_cliente = [vendaitem for vendaitem in View.vendaitem_listar() if vendaitem.idvenda == id_venda_atual]
+        todos_os_produtos = View.produto_listar()
+
+        # Filtrando os produtos no carrinho
+        produtos_cliente = []
+        for vendaitem in vendaitens_cliente:
+            for produto in todos_os_produtos:
+                if vendaitem.idproduto == produto.id:
+                    produtos_cliente.append(produto)
+                    break
+
+        # Caso o carrinho esteja vazio
+        if not produtos_cliente:
+            st.info("Nenhum produto no carrinho para remover.")
+            return
+
+        # Seleção do produto a ser removido
+        produto_excluir = st.selectbox("Selecione o produto", [produto.descricao for produto in produtos_cliente])
+
+        # Usando o parâmetro default no next()
+        idProduto = next((produto.id for produto in produtos_cliente if produto.descricao == produto_excluir), None)
+        if idProduto is None:
+            st.error("Erro ao identificar o produto selecionado.")
+            return
+
+        id_vendaitem_excluir = next((item.id for item in vendaitens_cliente if item.idproduto == idProduto), None)
+        if id_vendaitem_excluir is None:
+            st.error("Erro ao identificar o item no carrinho.")
+            return
+
+        # Atualização do estoque do produto
+        produto_selecionado = Produtos.listar_id(idProduto)
+        venda_item = VendaItens.listar_id(id_vendaitem_excluir)
+
+        if not venda_item:
+            st.error("Erro ao buscar o item da venda.")
+            return
+
+        # Ajustar estoque
+        novo_estoque = produto_selecionado.estoque + venda_item.qtd
+
+        # Botão para exclusão
+        if st.button("Excluir"):
+            View.produto_atualizar(idProduto, produto_selecionado.descricao, produto_selecionado.preco,novo_estoque, produto_selecionado.idCategoria)
+            View.vendaitem_excluir(id_vendaitem_excluir)
+            st.success("Produto removido do carrinho com sucesso!")
+            time.sleep(2)
+            st.rerun()
+
+    def meuspedidos():
+        # filtra as vendas do cliente
+        cliente_id = st.session_state.get("cliente_id")
+        vendas_cliente = View.vendas_cliente(cliente_id)  # Lista de vendas do cliente
+        id_venda_atual = vendas_cliente[-1].id  # Id da venda atual
+
+        vendaitens_cliente = [vendaitem for vendaitem in View.vendaitem_listar() if vendaitem.idvenda == id_venda_atual]
+
+        total = 0
+        for itens in vendaitens_cliente:
+            total += itens.preco
+
+        vendas_cliente[-1].total = total
+
+        if len(vendas_cliente) == 0: 
+            st.write("Nenhum produto cadastrado")
+        else:    
+            dic = []
+            for obj in vendas_cliente: dic.append(obj.__dict__)
+            df = pd.DataFrame([{"data": v.data, "total": v.total, "carrinho": v.carrinho} for v in vendas_cliente])
+            st.dataframe(df)
+
+    def fecharpedido():
+        # Filtra as vendas do cliente
+        cliente_id = st.session_state.get("cliente_id")
+        vendas_cliente = View.vendas_cliente(cliente_id)  # Lista de vendas do cliente
+        if not vendas_cliente:
+            st.warning("Nenhuma venda encontrada.")
+            return
+
+        id_venda_atual = vendas_cliente[-1].id  # Id da venda atual
+
+        # Carrinho mais recente (aberto)
+        vendaitens_cliente = [vendaitem for vendaitem in View.vendaitem_listar() if vendaitem.idvenda == id_venda_atual]
+
+        total_venda_atual = 0
+        for itens in vendaitens_cliente:
+            total_venda_atual += itens.preco
+
+        if total_venda_atual > 0:
+            # Atualizando/encerrando venda
+            View.venda_atualizar(id_venda_atual, vendas_cliente[-1].data, False, total_venda_atual, cliente_id)
+
+            # Criando novo carrinho
+            View.venda_inserir(datetime.now(), True, 0, cliente_id)
+            st.success("Venda Finalizada com sucesso")
+        else:
+            st.error("A compra não foi finalizada, Carrinho vazio")
