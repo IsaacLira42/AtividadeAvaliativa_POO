@@ -88,18 +88,28 @@ class ClienteUI:
 
                 # Botão para inserir o produto
                 if st.button("Inserir"):
-                    # Verifica se o produto já existe no carrinho
-                    vendaitens_cliente = [item for item in View.vendaitem_listar() if item.idvenda == id_venda_atual]
-                    if any(item.idproduto == idProduto for item in vendaitens_cliente):
-                        st.warning("Este produto já está no carrinho.")
+                    # Verificar se a quantidade solicitada está disponível no estoque
+                    if quantidade > produto_escolhido.estoque:
+                        st.error("Quantidade solicitada maior que o estoque disponível!")
                     else:
-                        # Atualizar estoque e inserir produto
-                        View.produto_atualizar(idProduto, produto_escolhido.descricao, produto_escolhido.preco, novo_estoque, produto_escolhido.idCategoria)
-                        View.vendaitem_inserir(quantidade, preco, id_venda_atual, idProduto)
-                        st.success("Produto inserido com sucesso!")
-                        time.sleep(2)
-                        st.rerun()
-
+                        # Verifica se o produto já existe no carrinho
+                        vendaitens_cliente = [item for item in View.vendaitem_listar() if item.idvenda == id_venda_atual]
+                        if any(item.idproduto == idProduto for item in vendaitens_cliente):
+                            st.warning("Este produto já está no carrinho.")
+                        else:
+                            # Atualizar estoque e inserir produto
+                            novo_estoque = produto_escolhido.estoque - quantidade  # Atualiza o estoque corretamente
+                            View.produto_atualizar(
+                                idProduto, 
+                                produto_escolhido.descricao, 
+                                produto_escolhido.preco, 
+                                novo_estoque, 
+                                produto_escolhido.idCategoria
+                            )
+                            View.vendaitem_inserir(quantidade, preco, id_venda_atual, idProduto)
+                            st.success("Produto inserido com sucesso!")
+                            time.sleep(2)
+                            st.rerun()
             else:
                 st.error("Não há produtos disponíveis na categoria selecionada.")
         else:
