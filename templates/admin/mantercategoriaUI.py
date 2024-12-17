@@ -3,9 +3,6 @@ import pandas as pd
 from view import View
 import time
 
-from models.categoria import Categoria
-from models.categorias import Categorias
-
 class ManterCategoriaUI:
     def main():
         st.header("Cadastro de Categorias")

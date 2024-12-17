@@ -1,3 +1,4 @@
+from datetime import datetime
 import streamlit as st
 
 from models.cliente import Cliente
@@ -12,10 +13,10 @@ from models.vendaitem import VendaItem
 from models.vendaitens import VendaItens
 from templates.abrircontaUI import AbrirContaUI
 from templates.loginUi import LoginUI
-from templates.manterclienteUI import ManterClienteUI
-from templates.manterprodutosUI import ManterProdutoUI
-from templates.mantercategoriaUI import ManterCategoriaUI
-# from templates.clienteUI import ClienteUI
+from templates.admin.manterclienteUI import ManterClienteUI
+from templates.admin.manterprodutosUI import ManterProdutoUI
+from templates.admin.mantercategoriaUI import ManterCategoriaUI
+from templates.client.clienteUI import ClienteUI
 
 from view import View
 
@@ -30,9 +31,17 @@ class IndexUI:
         if op == "Cadastro de Clientes": ManterClienteUI.main()
         if op == "Cadastro de Produtos": ManterProdutoUI.main()
         if op == "Cadastro de Categorias": ManterCategoriaUI.main()
+        
     def menu_cliente():
-        op = st.sidebar.selectbox("Menu", ["Listar Produtos", "Adicionar Produto no Carrinho", "Fechar Pedido", "Ver Meus Pedidos"])
-        # if op == "Listar Produtos" : ClienteUI.main()
+        # filtra as vendas do cliente
+        cliente_id = st.session_state.get("cliente_id")
+        vendas_cliente = View.vendas_cliente(cliente_id)
+
+        if len(vendas_cliente) == 0 or vendas_cliente[-1].carrinho == False:
+            if cliente_id:
+                View.venda_inserir(datetime.now(), True, 0, cliente_id)
+        
+        ClienteUI.main()
 
     def sair_do_sistema():
         if st.sidebar.button("Sair"):
@@ -53,7 +62,7 @@ class IndexUI:
             if admin: IndexUI.menu_admin()
             else: IndexUI.menu_cliente()
             # controle de sair do sistema
-            IndexUI.sair_do_sistema() 
+            IndexUI.sair_do_sistema()
     
     def main():
         # verifica a existe o usuário admin

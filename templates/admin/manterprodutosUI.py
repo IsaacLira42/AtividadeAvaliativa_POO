@@ -3,9 +3,6 @@ import pandas as pd
 from view import View
 import time
 
-from models.categoria import Categoria
-from models.categorias import Categorias
-
 class ManterProdutoUI:
     def main():
         st.header("Cadastro de Produtos")
@@ -30,7 +27,7 @@ class ManterProdutoUI:
         preco = st.number_input("Preço")
         estoque = st.number_input("Estoque")
 
-        categorias = Categorias.listar()
+        categorias = View.categoria_listar()
         if len(categorias) > 0:
             # Selecionar a categoria e obter o ID correspondente
             categoria_selecionada = st.selectbox("Selecione a categoria", [categoria.descricao for categoria in categorias])
@@ -58,7 +55,7 @@ class ManterProdutoUI:
             preco = st.number_input("Atualizar Preço")
             estoque = st.number_input("Atualizar Estoque")
 
-            categorias = Categorias.listar()
+            categorias = View.categoria_listar()
             if categorias:
                 categoria_selecionada = st.selectbox("Selecione a categoria", [categoria.descricao for categoria in categorias], key="select_categoria_atualizar")
                 idCategoria = next(categoria.id for categoria in categorias if categoria.descricao == categoria_selecionada)

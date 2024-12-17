@@ -1,5 +1,6 @@
 import datetime
 from typing import List, Optional
+import streamlit as st
 
 from models.cliente import Cliente
 from models.clientes import Clientes
@@ -92,6 +93,11 @@ class View:
     @classmethod
     def venda_excluir(cls, id: int) -> None:
         Vendas.excluir(id)
+    # Outros métodos da venda ######################
+    @staticmethod
+    def vendas_cliente(cliente_id):
+        lista_de_todas_as_vendas = View.venda_listar()
+        return [venda for venda in lista_de_todas_as_vendas if venda.idCliente == cliente_id]
 
 
     ############ Métodos sobre VendaItens ############

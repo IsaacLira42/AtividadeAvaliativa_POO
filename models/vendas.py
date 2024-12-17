@@ -53,18 +53,18 @@ class Vendas:
                 venda.total = obj.total
                 venda.idCliente = obj.idCliente
 
-                print("Venda atualizada com sucesso!")
+                #print("Venda atualizada com sucesso!")
 
                 cls.salvar()
                 return
-        print("Venda não encontrada")
+        #print("Venda não encontrada")
 
     @classmethod
     def excluir(cls, id: int) -> None:
         cls.abrir()
         cls.objetos = [venda for venda in cls.objetos if venda.id != id]
         cls.salvar()
-        print("Venda removida com sucesso!")
+        #print("Venda removida com sucesso!")
 
     ############ Outros métodos ############################
     @classmethod
@@ -74,9 +74,19 @@ class Vendas:
                 json.dump([], arquivo)
 
         with open("Vendas.json", mode="r") as arquivo:
-            cls.objetos = [Venda(**obj) for obj in json.load(arquivo)]
+            vendas_data = json.load(arquivo)
+            cls.objetos = []
+            for venda in vendas_data:
+                venda['data'] = datetime.fromisoformat(venda['data'])  # Converte a string para datetime
+                cls.objetos.append(Venda(**venda))
 
     @classmethod
     def salvar(cls) -> None:
+        vendas_data = []
+        for venda in cls.objetos:
+            venda_data = vars(venda)
+            venda_data['data'] = venda_data['data'].isoformat()  # Converte datetime para string
+            vendas_data.append(venda_data)
+
         with open("Vendas.json", mode="w") as arquivo:
-            json.dump(cls.objetos, arquivo, default=vars)
+            json.dump(vendas_data, arquivo, indent=4)
