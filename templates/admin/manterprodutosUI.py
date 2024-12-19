@@ -24,8 +24,8 @@ class ManterProdutoUI:
 
     def inserir():
         nome = st.text_input("Informe o nome do produto")
-        preco = st.number_input("Preço")
-        estoque = st.number_input("Estoque")
+        preco = st.number_input("Preço", min_value=0.01, format="%.2f")
+        estoque = st.number_input("Estoque", min_value=0, step=1)
 
         categorias = View.categoria_listar()
         if len(categorias) > 0:
@@ -52,8 +52,8 @@ class ManterProdutoUI:
             produto = next(produto for produto in produtos if produto.descricao == produto_selecionado)
 
             descricao = st.text_input("Informe o novo nome do produto", produto.descricao)
-            preco = st.number_input("Atualizar Preço")
-            estoque = st.number_input("Atualizar Estoque")
+            preco = st.number_input("Atualizar Preço", min_value=0.01, format="%.2f")
+            estoque = st.number_input("Atualizar Estoque", min_value=0, step=1)
 
             categorias = View.categoria_listar()
             if categorias:

@@ -78,12 +78,16 @@ class ClienteUI:
 
                 produto_escolhido = Produtos.listar_id(idProduto)   # Produto escolhido
 
-                quantidade = st.number_input("Quantidade do produto", min_value=1, step=1)
+                quantidade = st.number_input("Quantidade do produto", min_value=1, step=1)  # Valor mínimo de 1
+
+                if quantidade < 1:
+                    st.error("A quantidade não pode ser negativa ou zero.")
+                    quantidade = 1  # Impõe que a quantidade mínima seja 1
 
                 # Calcular o preço
                 preco = produto_escolhido.preco * quantidade
 
-                # Atualizar o estoque do produo selecionad
+                # Atualizar o estoque do produto selecionado
                 novo_estoque = produto_escolhido.estoque - quantidade
 
                 # Botão para inserir o produto
@@ -113,7 +117,7 @@ class ClienteUI:
             else:
                 st.error("Não há produtos disponíveis na categoria selecionada.")
         else:
-            st.write("Nenhuma produto disponível.")
+            st.write("Nenhuma categoria disponível.")
 
     def remover():
         # Filtra as vendas do cliente
